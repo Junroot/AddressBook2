@@ -1,7 +1,7 @@
 ﻿<Window x:Class="AddressBook2.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="AddressBook" Height="500" Width="800" ResizeMode="NoResize">
+        Title="AddressBook" Height="500" Width="800" ResizeMode="NoResize" Closing="Window_Closing"  >
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="5*" />
@@ -23,7 +23,7 @@
         </Grid.ColumnDefinitions>
 
 
-        <ListView Grid.Row="1" Grid.Column="1" Name="AddressBookList" SelectionChanged="AddressBookList_SelectionChanged"  Grid.ColumnSpan="5">
+        <ListView Grid.Row="1" Grid.Column="1" Name="AddressBookList" SelectionChanged="AddressBookList_SelectionChanged" Grid.ColumnSpan="5">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Name" Width="100"  DisplayMemberBinding="{Binding Name}" />
@@ -40,7 +40,21 @@
         <Button Name="EditButton" Click="EditButton_Click" Grid.Row="3" Grid.Column="3">Edit</Button>
         <Button Name="DeleteButton" Click="DeleteButton_Click" Grid.Row="3" Grid.Column="5">Delete</Button>
         <Grid Name="Action" Grid.Column="7" Grid.Row="1" Grid.RowSpan="3" >
-            <Image Source="Original.jpg" Stretch="Uniform" Width="351" />
+            <Button Name="CallButton" BorderThickness="0" Margin="0,46,0,290">
+                <StackPanel>
+                    <Image Source="Call.png" />
+                </StackPanel>
+            </Button>
+            <Button Name="SMSButton" BorderThickness="0" Margin="0,168,0,168">
+                <StackPanel>
+                    <Image  Source="SMS.png"/>
+                </StackPanel>
+            </Button>
+            <Button Name="ExitButton" Click="ExitButton_Click" BorderThickness="0" Margin="0,290,0,46">
+                <StackPanel>
+                    <Image Source="Exit.png"/>
+                </StackPanel>
+            </Button>
         </Grid>
         <Grid Name="ListSelected" Visibility="Collapsed" Grid.Column="7" Grid.Row="1" Grid.RowSpan="3">
             <Grid.RowDefinitions>
@@ -104,6 +118,39 @@
             <TextBox Name="NumberBox" Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="6" VerticalAlignment="Center"  />
             <Button Name="InsertCancelButton" Click="AddButton_Click" Grid.Row="6" Grid.Column="4" Grid.ColumnSpan="3" Margin="28,10,10,10">Cancel</Button>
             <Button Name="InsertButton" Click="InsertButton_Click" Grid.Row="6" Grid.Column="7" Grid.ColumnSpan="2" Margin="0,10">Add</Button>
+        </Grid>
+        <Grid Name="EditBox" Visibility="Collapsed" Grid.Column="7" Grid.Row="1" Grid.RowSpan="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock Grid.Row="2" Grid.Column="1" VerticalAlignment="Center">Name</TextBlock>
+            <TextBox Name="EditNameBox" Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="6" VerticalAlignment="Center" />
+            <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center">Number</TextBlock>
+            <TextBox Name="EditNumberBox" Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="6" VerticalAlignment="Center"  />
+            <Button Name="ModifyCancelButton" Click="EditButton_Click" Grid.Row="6" Grid.Column="4" Grid.ColumnSpan="3" Margin="28,10,10,10">Cancel</Button>
+            <Button Name="ModifyButton" Click="ModifyButton_Click"  Grid.Row="6" Grid.Column="7" Grid.ColumnSpan="2" Margin="0,10">Edit</Button>
         </Grid>
     </Grid>
 </Window>

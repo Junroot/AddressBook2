@@ -11,5 +11,3 @@ c:\users\jungeun\documents\visual studio 2013\Projects\AddressBook2\AddressBook2
 c:\users\jungeun\documents\visual studio 2013\Projects\AddressBook2\AddressBook2\obj\Debug\AddressBook2.csproj.GenerateResource.Cache
 c:\users\jungeun\documents\visual studio 2013\Projects\AddressBook2\AddressBook2\obj\Debug\AddressBook2.exe
 c:\users\jungeun\documents\visual studio 2013\Projects\AddressBook2\AddressBook2\obj\Debug\AddressBook2.pdb
-C:\Users\JunGeun\documents\visual studio 2013\Projects\AddressBook2\AddressBook2\obj\Debug\Window1.baml
-C:\Users\JunGeun\documents\visual studio 2013\Projects\AddressBook2\AddressBook2\obj\Debug\Window1.g.cs
