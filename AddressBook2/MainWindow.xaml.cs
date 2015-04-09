@@ -13,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.IO;
+using System.Xml;
 
 namespace AddressBook2
 {
@@ -21,15 +23,65 @@ namespace AddressBook2
     /// </summary>
     public partial class MainWindow : Window
     {
+        List<Address> AddressBook = new List<Address>();
         public MainWindow()
         {
             InitializeComponent();
-            AddressBookList.Items.Add(new User() { Name = "John Doe", Number = "01012345678" });
-            AddressBookList.Items.Add(new User() { Name = "Jane Doe", Number = "01012345679" });
-            AddressBookList.Items.Add(new User() { Name = "Sammy Doe", Number = "01012345680" });
+            using (XmlReader reader = XmlReader.Create("Address.xml"))
+            {
+                String name = "";
+                String number = "";
+                String status = "";
+                while(reader.Read())
+                {
+                    /* Element들의 구조가
+                     * addresses - address - name
+                     *                     - number
+                     *                    (- number of numbers)
+                     *                    (- number list)
+                     * 이런 구조로 되어있으므로
+                     * 현재 Element가 status에 뭔지 구분해서
+                     * 각 알맞는 것에 추가한 후
+                     * Address로 만들어서 AddressBook에 추가
+                     * 
+                     * xml이라서 유니코드도 지원하고
+                     * C#에서 다른 언어 섞여있어도 잘 정렬해준다 */
+                    switch(reader.NodeType)
+                    {
+                        case XmlNodeType.Element:
+                            status = reader.Name;
+                            break;
+                        case XmlNodeType.Text:
+                            if (status == "Name")
+                                name = reader.Value;
+                            else if (status == "Number")
+                                number = reader.Value;
+                            break;
+                        case XmlNodeType.EndElement:
+                            if(reader.Name == "Address")
+                                AddressBook.Add(new Address(name, number));
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
 
-            AddressBookList.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("Name",System.ComponentModel.ListSortDirection.Ascending));
-            AddressBookList.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("Number", System.ComponentModel.ListSortDirection.Ascending));
+            AddressBook.Sort(delegate(Address x, Address y)
+            {
+                if (x.Name == null && y.Name == null) return 0;
+                else if (x.Name == null) return -1;
+                else if (y.Name == null) return 1;
+                else return x.Name.CompareTo(y.Name);
+            });
+
+            foreach (var item in AddressBook)
+            {
+                AddressBookList.Items.Add(new User(item.Name, item.RepNumber));
+            }
+
+            //AddressBookList.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("Name",System.ComponentModel.ListSortDirection.Ascending));
+            //AddressBookList.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("Number", System.ComponentModel.ListSortDirection.Ascending));
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -40,6 +92,21 @@ namespace AddressBook2
             {
                 e.Cancel = true;
             }
+            using (XmlWriter writer = XmlWriter.Create("Address.xml"))
+            {
+                writer.WriteStartDocument();
+                writer.WriteStartElement("Addresses");
+                foreach(Address address in AddressBook)
+                {
+                    writer.WriteStartElement("Address");
+                    writer.WriteElementString("Name", address.Name);
+                    writer.WriteElementString("Number", address.RepNumber);
+                    writer.WriteEndElement();
+                }
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
+            }
+
         }
 
         private void AddressBookList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -114,6 +181,7 @@ namespace AddressBook2
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
+            // TODO 선택된거의 이름을 리스트에서 찾아서 삭제하게 해야함
             if (AddressBookList.SelectedItem != null)
             {
                 int temp = AddressBookList.Items.IndexOf(AddressBookList.SelectedItem);
@@ -128,8 +196,19 @@ namespace AddressBook2
 
         private void InsertButton_Click(object sender, RoutedEventArgs e)
         {
+            User new_user;
             int temp = AddressBookList.SelectedIndex;
-            AddressBookList.Items.Add(new User() { Name = NameBox.Text, Number = NumberBox.Text });
+            AddressBookList.Items.Add(new_user = new User() { Name = NameBox.Text, Number = NumberBox.Text });
+            //입력 받음
+            AddressBook.Add(new Address(new_user));
+            //받으면 소트도 해야겠지
+            AddressBook.Sort(delegate(Address x, Address y)
+            {
+                if (x.Name == null && y.Name == null) return 0;
+                else if (x.Name == null) return -1;
+                else if (y.Name == null) return 1;
+                else return x.Name.CompareTo(y.Name);
+            });
             if (temp != -1)
             {
                 AddressBookList.SelectedItem = AddressBookList.Items[temp];
@@ -146,8 +225,13 @@ namespace AddressBook2
 
         private void ModifyButton_Click(object sender, RoutedEventArgs e)
         {
-            ((User)AddressBookList.SelectedItem).Name = EditNameBox.Text;
-            ((User)AddressBookList.SelectedItem).Number = EditNumberBox.Text;
+            //기존에 바로 수정하던거에서 modified라는 User를 만들고 그걸 대입하게 함
+            User Original = new User((User)AddressBookList.SelectedItem);
+            User modified = new User(EditNameBox.Text, EditNumberBox.Text);
+            ((User)AddressBookList.SelectedItem).Name = modified.Name;
+            ((User)AddressBookList.SelectedItem).Number = modified.Number;
+            //TODO Original에 저장되어있는 정보를 이용해서 AddressBook에서 찾고
+            //     그 찾은 정보를 변경 - 꽤 어려울듯
             AddressBookList.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("Name", System.ComponentModel.ListSortDirection.Ascending));
             AddressBookList.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("Number", System.ComponentModel.ListSortDirection.Ascending));
             AddressBookList.Items.Refresh();
@@ -185,6 +269,21 @@ namespace AddressBook2
         }
         public class User
         {
+            public User (String name, String number)
+            {
+                Name = name;
+                Number = number;
+            }
+            public User ()
+            {
+                Name = "";
+                Number = "";
+            }
+            public User(User user)
+            {
+                Name = user.Name;
+                Number = user.Number;
+            }
             public string Name { get; set; }
 
             public string Number { get; set; }
