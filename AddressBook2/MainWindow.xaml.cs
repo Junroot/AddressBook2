@@ -35,9 +35,9 @@ namespace AddressBook2
                 while(reader.Read())
                 {
                     /* Element들의 구조가
-                     * addresses - address - name
-                     *                     - number
-                     *                    (- number of numbers)
+                     * Addresses - Address - Name
+                     *                     - Number
+                     *                    (- size of number list)
                      *                    (- number list)
                      * 이런 구조로 되어있으므로
                      * 현재 Element가 status에 뭔지 구분해서
@@ -66,8 +66,13 @@ namespace AddressBook2
                     }
                 }
             }
+            RefreshListView();
+        }
+        private void RefreshListView() //리스트뷰 (AddressBookList) 새로고침
+        {
+            AddressBookList.Items.Clear(); //ListView 내용 초기화
 
-            AddressBook.Sort(delegate(Address x, Address y)
+            AddressBook.Sort(delegate(Address x, Address y) //이름순으로 sort
             {
                 if (x.Name == null && y.Name == null) return 0;
                 else if (x.Name == null) return -1;
@@ -75,13 +80,10 @@ namespace AddressBook2
                 else return x.Name.CompareTo(y.Name);
             });
 
-            foreach (var item in AddressBook)
+            foreach (var item in AddressBook) //순서대로 Listview에 넣음
             {
                 AddressBookList.Items.Add(new User(item.Name, item.RepNumber));
             }
-
-            //AddressBookList.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("Name",System.ComponentModel.ListSortDirection.Ascending));
-            //AddressBookList.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("Number", System.ComponentModel.ListSortDirection.Ascending));
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -92,26 +94,28 @@ namespace AddressBook2
             {
                 e.Cancel = true;
             }
-            using (XmlWriter writer = XmlWriter.Create("Address.xml"))
+            else //닫힐 때 파일 저장
             {
-                writer.WriteStartDocument();
-                writer.WriteStartElement("Addresses");
-                foreach(Address address in AddressBook)
+                using (XmlWriter writer = XmlWriter.Create("Address.xml"))
                 {
-                    writer.WriteStartElement("Address");
-                    writer.WriteElementString("Name", address.Name);
-                    writer.WriteElementString("Number", address.RepNumber);
+                    writer.WriteStartDocument();
+                    writer.WriteStartElement("Addresses");
+                    foreach (Address address in AddressBook)
+                    {
+                        writer.WriteStartElement("Address");
+                        writer.WriteElementString("Name", address.Name);
+                        writer.WriteElementString("Number", address.RepNumber);
+                        writer.WriteEndElement();
+                    }
                     writer.WriteEndElement();
+                    writer.WriteEndDocument();
                 }
-                writer.WriteEndElement();
-                writer.WriteEndDocument();
             }
-
         }
 
         private void AddressBookList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            User u = new User() { };
+            User u = new User();
             if (AddressBookList.SelectedItem != null)
             {
                 u = (User)AddressBookList.SelectedItem;
@@ -186,6 +190,7 @@ namespace AddressBook2
             {
                 int temp = AddressBookList.Items.IndexOf(AddressBookList.SelectedItem);
                 AddressBookList.Items.RemoveAt(AddressBookList.Items.IndexOf(AddressBookList.SelectedItem));
+                AddressBook.RemoveAt(temp);
                 if (AddressBookList.Items.Count > 0)
                 {
                     if (temp >= AddressBookList.Items.Count) AddressBookList.SelectedItem = AddressBookList.Items[temp - 1];
@@ -213,10 +218,10 @@ namespace AddressBook2
             {
                 AddressBookList.SelectedItem = AddressBookList.Items[temp];
             }
+            RefreshListView();
+            
             NameBox.Text = String.Empty;
             NumberBox.Text = String.Empty;
-            AddressBookList.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("Name", System.ComponentModel.ListSortDirection.Ascending));
-            AddressBookList.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("Number", System.ComponentModel.ListSortDirection.Ascending));
             AddBox.Visibility = Visibility.Collapsed;
             ListSelected.Visibility = Visibility.Collapsed;
             Action.Visibility = Visibility.Visible;
@@ -226,15 +231,17 @@ namespace AddressBook2
         private void ModifyButton_Click(object sender, RoutedEventArgs e)
         {
             //기존에 바로 수정하던거에서 modified라는 User를 만들고 그걸 대입하게 함
-            User Original = new User((User)AddressBookList.SelectedItem);
+            int temp = AddressBookList.Items.IndexOf(AddressBookList.SelectedItem);
+            //선택된 리스트뷰의 인덱스가 결국 리스트의 인덱스니까...
+            AddressBook.RemoveAt(temp); //지우고 그냥 다시 씀
             User modified = new User(EditNameBox.Text, EditNumberBox.Text);
             ((User)AddressBookList.SelectedItem).Name = modified.Name;
             ((User)AddressBookList.SelectedItem).Number = modified.Number;
-            //TODO Original에 저장되어있는 정보를 이용해서 AddressBook에서 찾고
-            //     그 찾은 정보를 변경 - 꽤 어려울듯
-            AddressBookList.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("Name", System.ComponentModel.ListSortDirection.Ascending));
-            AddressBookList.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("Number", System.ComponentModel.ListSortDirection.Ascending));
-            AddressBookList.Items.Refresh();
+
+            AddressBook.Add(new Address(modified));
+
+            RefreshListView(); //이때 재정렬됨
+           
             AddBox.Visibility = Visibility.Collapsed;
             ListSelected.Visibility = Visibility.Collapsed;
             Action.Visibility = Visibility.Visible;
