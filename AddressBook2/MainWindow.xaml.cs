@@ -96,8 +96,9 @@ namespace AddressBook2
             }
             else //닫힐 때 파일 저장
             {
-                using (XmlWriter writer = XmlWriter.Create("Address.xml"))
+                using (XmlTextWriter writer = new XmlTextWriter("Address.xml", System.Text.Encoding.UTF8))
                 {
+                    writer.Formatting = Formatting.Indented;
                     writer.WriteStartDocument();
                     writer.WriteStartElement("Addresses");
                     foreach (Address address in AddressBook)
