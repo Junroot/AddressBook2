@@ -176,11 +176,7 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-<<<<<<< HEAD
             <TextBlock Grid.Row="2" Grid.Column="1" VerticalAlignment="Center">이름</TextBlock>
-=======
-            <TextBlock Grid.Row="2" Grid.Column="1" VerticalAlignment="Center">Name</TextBlock>
->>>>>>> origin/master
             <TextBox Name="EditNameBox" Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="6" VerticalAlignment="Center" />
             <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center">번호</TextBlock>
             <TextBox Name="EditNumberBox" Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="6" VerticalAlignment="Center"  />
@@ -208,23 +204,14 @@
         </Grid>
         <Grid Name="ReceiveCall" Visibility="Collapsed" Grid.Column="7" Grid.Row="1" HorizontalAlignment="Center" RenderTransformOrigin="0.63,0.517" Grid.RowSpan="3">
             <Image Margin="38,0,38,79" Source="2.png"/>
-<<<<<<< HEAD
             <Button Name="ReveiveButton" Click="ReveiveButton_Click" Margin="0,374,199,10">수락</Button>
             <Button Name="RefuseButton" Click="RefuseButton_Click"  Margin="199,374,0,10">거절</Button>
-=======
-            <Button Name="ReveiveButton" Click="ReveiveButton_Click" Margin="0,374,199,10">Receive</Button>
-            <Button Name="RefuseButton" Click="RefuseButton_Click"  Margin="199,374,0,10">Refuse</Button>
->>>>>>> origin/master
         </Grid>
         <Grid Name="Calling" Visibility="Collapsed" Grid.Column="7" Grid.Row="1" Grid.RowSpan="3">
             <Image Margin="67,0,67,126" Source="pawn.png" Stretch="Fill"/>
             <TextBlock HorizontalAlignment="Center" FontSize="20" Margin="153,305,153,-4"><Run Text="&lt;"/><Run Text="Name"/><Run Text="&gt;"/></TextBlock>
             <TextBlock HorizontalAlignment="Center" FontSize="20" Margin="143,331,143,-30"><Run Text="&lt;"/><Run Text="Number"/><Run Text="&gt;"/></TextBlock>
-<<<<<<< HEAD
             <Button Name="CallCloseButton" Click="CallCloseButton_Click"  Margin="49,374,49,10">종료</Button>
-=======
-            <Button Name="CallCloseButton" Click="CallCloseButton_Click"  Margin="49,374,49,10">End</Button>
->>>>>>> origin/master
         </Grid>
     </Grid>
 </Window>

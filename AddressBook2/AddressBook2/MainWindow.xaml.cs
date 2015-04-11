@@ -24,10 +24,7 @@ namespace AddressBook2
     public partial class MainWindow : Window
     {
         List<Address> AddressBook = new List<Address>();
-<<<<<<< HEAD
         List<Address> Filtered = new List<Address>();
-=======
->>>>>>> origin/master
         MediaPlayer mp = new MediaPlayer();
         public MainWindow()
         {
@@ -382,14 +379,11 @@ namespace AddressBook2
             public string Number { get; set; }
         }
 
-<<<<<<< HEAD
         private void listsearch_TextChanged(object sender, TextChangedEventArgs e)
         {
             RefreshListView();
         }
 
-=======
->>>>>>> origin/master
         
     }
 }
