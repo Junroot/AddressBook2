@@ -22,7 +22,7 @@
             <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="5">
+        <Grid Name ="main"  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="5">
             <Grid.RowDefinitions>
                 <RowDefinition Height="5*" />
                 <RowDefinition Height="5*" />
@@ -56,7 +56,7 @@
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="이름" Width="100"  DisplayMemberBinding="{Binding Name}" />
-                        <GridViewColumn Header="번호" Width="200" DisplayMemberBinding="{Binding Number}" />
+                        <GridViewColumn Header="번호" Width="180" DisplayMemberBinding="{Binding Number}" />
                     </GridView>
                 </ListView.View>
                 <ListView.ItemContainerStyle>
@@ -69,7 +69,25 @@
         <Button Name="AddButton" Click="AddButton_Click" Grid.Row="3" Grid.Column="1">추가</Button>
         <Button Name="EditButton" Click="EditButton_Click" Grid.Row="3" Grid.Column="3">편집</Button>
         <Button Name="DeleteButton" Click="DeleteButton_Click" Grid.Row="3" Grid.Column="5">삭제</Button>
+        <Grid Name="CallHistory" Visibility="Collapsed" Grid.Row="1" Grid.Column="7" Grid.RowSpan="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="75*" />
+                <RowDefinition Height="5*" />
+                <RowDefinition Height="5*" />
+            </Grid.RowDefinitions>
+            <ListView Name="CallBookList" Grid.Row="0">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="상태" Width="50" DisplayMemberBinding="{Binding State}" />
+                        <GridViewColumn Header="번호" Width="150" DisplayMemberBinding="{Binding Number}" />
+                        <GridViewColumn Header="시간" Width="150"  DisplayMemberBinding="{Binding Time}" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <Button Name="CloseCallBook" Click="CloseCallBook_Click" Grid.Row="2" Margin="254,0,0,0">취소</Button>
+        </Grid>
         <Grid Name="Action" Grid.Column="7" Grid.Row="1" Grid.RowSpan="3" >
+            <TextBlock HorizontalAlignment="Center" FontSize="20">HOME</TextBlock>
             <Button Name="CallButton" Click="CallButton_Click" BorderThickness="0" Margin="0,46,0,290">
                 <StackPanel>
                     <Image Source="Call.png" />
@@ -190,7 +208,7 @@
                     <Image Source="Call.png" />
                 </StackPanel>
             </Button>
-            <Button Name="HistoryButton" BorderThickness="0" Margin="0,168,0,168">
+            <Button Name="HistoryButton" Click="HistoryButton_Click" BorderThickness="0" Margin="0,168,0,168">
                 <StackPanel>
                     <Image  Source="History.png"/>
                 </StackPanel>
@@ -204,13 +222,13 @@
         </Grid>
         <Grid Name="ReceiveCall" Visibility="Collapsed" Grid.Column="7" Grid.Row="1" HorizontalAlignment="Center" RenderTransformOrigin="0.63,0.517" Grid.RowSpan="3">
             <Image Margin="38,0,38,79" Source="2.png"/>
+            <TextBlock Name="CallName" HorizontalAlignment="Center" FontSize="20" Margin="0,305,0,-4"><Run Text="&lt;"/><Run Text="Name"/><Run Text="&gt;"/></TextBlock>
             <Button Name="ReveiveButton" Click="ReveiveButton_Click" Margin="0,374,199,10">수락</Button>
             <Button Name="RefuseButton" Click="RefuseButton_Click"  Margin="199,374,0,10">거절</Button>
         </Grid>
         <Grid Name="Calling" Visibility="Collapsed" Grid.Column="7" Grid.Row="1" Grid.RowSpan="3">
             <Image Margin="67,0,67,126" Source="pawn.png" Stretch="Fill"/>
-            <TextBlock HorizontalAlignment="Center" FontSize="20" Margin="153,305,153,-4"><Run Text="&lt;"/><Run Text="Name"/><Run Text="&gt;"/></TextBlock>
-            <TextBlock HorizontalAlignment="Center" FontSize="20" Margin="143,331,143,-30"><Run Text="&lt;"/><Run Text="Number"/><Run Text="&gt;"/></TextBlock>
+            <TextBlock Name ="CallingName" HorizontalAlignment="Center" FontSize="20" Margin="0,305,0,-4"><Run Text="&lt;"/><Run Text="Name"/><Run Text="&gt;"/></TextBlock>
             <Button Name="CallCloseButton" Click="CallCloseButton_Click"  Margin="49,374,49,10">종료</Button>
         </Grid>
     </Grid>

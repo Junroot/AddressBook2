@@ -25,7 +25,10 @@ namespace AddressBook2
     {
         List<Address> AddressBook = new List<Address>();
         List<Address> Filtered = new List<Address>();
+        List<Call> CallBook = new List<Call>();
         MediaPlayer mp = new MediaPlayer();
+        String CallUserNum;
+        Address CallUser;
         public MainWindow()
         {
             InitializeComponent();
@@ -68,6 +71,38 @@ namespace AddressBook2
                     }
                 }
             }
+            using (XmlReader reader = XmlReader.Create("Call.xml"))
+            {
+                String time = "";
+                String number = "";
+                String state = "";
+                String status = "";
+                while(reader.Read())
+                {
+                    switch (reader.NodeType)
+                    {
+                        case XmlNodeType.Element:
+                            status = reader.Name;
+                            break;
+                        case XmlNodeType.Text:
+                            if (status == "Time")
+                                time = reader.Value;
+                            else if (status == "Number")
+                                number = reader.Value;
+                            else if (status == "State")
+                                state = reader.Value;
+                            break;
+                        case XmlNodeType.EndElement:
+                            if (reader.Name == "Call")
+                                CallBook.Add(new Call(time, number, state));
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            
+            RefreshCallBookList();
             RefreshListView();
         }
         private void RefreshListView() //리스트뷰 (AddressBookList) 새로고침
@@ -88,6 +123,23 @@ namespace AddressBook2
                 AddressBookList.Items.Add(new User(item.Name, item.RepNumber));
             }
         }
+        private void RefreshCallBookList()
+        {
+            CallBookList.Items.Clear();
+            CallBook.Sort(delegate(Call x, Call y) //시간순으로 sort
+            {
+                if (x.Time == null && y.Time == null) return 0;
+                else if (x.Time == null) return -1;
+                else if (y.Time == null) return 1;
+                else return -(x.Time.CompareTo(y.Time));
+            });
+            foreach (var item in CallBook) //순서대로 Listview에 넣음
+            {
+                String printtime =  ""+ item.Time[0] + item.Time[1] + item.Time[2] + item.Time[3] + "-" + item.Time[4] + item.Time[5] + "-" + item.Time[6] + item.Time[7] + " " + item.Time[8] + item.Time[9] + ":" + item.Time[10] + item.Time[11] + ":" + item.Time[12] + item.Time[13];
+                CallBookList.Items.Add(new Call(printtime, item.Number, item.State));
+            }
+        }
+
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -114,6 +166,22 @@ namespace AddressBook2
                     writer.WriteEndElement();
                     writer.WriteEndDocument();
                 }
+                using (XmlTextWriter writer = new XmlTextWriter("Call.xml", System.Text.Encoding.UTF8))
+                {
+                    writer.Formatting = Formatting.Indented;
+                    writer.WriteStartDocument();
+                    writer.WriteStartElement("Calls");
+                    foreach (Call call in CallBook)
+                    {
+                        writer.WriteStartElement("Call");
+                        writer.WriteElementString("Time", call.Time);
+                        writer.WriteElementString("Number", call.Number);
+                        writer.WriteElementString("State", call.State);
+                        writer.WriteEndElement();
+                    }
+                    writer.WriteEndElement();
+                    writer.WriteEndDocument();
+                }
             }
         }
 
@@ -131,6 +199,8 @@ namespace AddressBook2
                 EditBox.Visibility = Visibility.Collapsed;
                 CallBox.Visibility = Visibility.Collapsed;
                 ReceiveCall.Visibility = Visibility.Collapsed;
+                Calling.Visibility = Visibility.Collapsed;
+                CallHistory.Visibility = Visibility.Collapsed;
             }
             else
             {
@@ -140,6 +210,8 @@ namespace AddressBook2
                 EditBox.Visibility = Visibility.Collapsed;
                 CallBox.Visibility = Visibility.Collapsed;
                 ReceiveCall.Visibility = Visibility.Collapsed;
+                Calling.Visibility = Visibility.Collapsed;
+                CallHistory.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -153,6 +225,8 @@ namespace AddressBook2
                 EditBox.Visibility = Visibility.Collapsed;
                 CallBox.Visibility = Visibility.Collapsed;
                 ReceiveCall.Visibility = Visibility.Collapsed;
+                Calling.Visibility = Visibility.Collapsed;
+                CallHistory.Visibility = Visibility.Collapsed;
 
             }
             else if (AddBox.Visibility == Visibility.Visible)
@@ -163,6 +237,8 @@ namespace AddressBook2
                 EditBox.Visibility = Visibility.Collapsed;
                 CallBox.Visibility = Visibility.Collapsed;
                 ReceiveCall.Visibility = Visibility.Collapsed;
+                Calling.Visibility = Visibility.Collapsed;
+                CallHistory.Visibility = Visibility.Collapsed;
                 NameBox.Text = String.Empty;
                 NumberBox.Text = String.Empty;
 
@@ -182,6 +258,8 @@ namespace AddressBook2
                     EditBox.Visibility = Visibility.Visible;
                     CallBox.Visibility = Visibility.Collapsed;
                     ReceiveCall.Visibility = Visibility.Collapsed;
+                    Calling.Visibility = Visibility.Collapsed;
+                    CallHistory.Visibility = Visibility.Collapsed;
                     EditNameBox.Text = u.Name;
                     EditNumberBox.Text = u.Number;
                 }
@@ -195,6 +273,8 @@ namespace AddressBook2
                 EditBox.Visibility = Visibility.Collapsed;
                 CallBox.Visibility = Visibility.Collapsed;
                 ReceiveCall.Visibility = Visibility.Collapsed;
+                Calling.Visibility = Visibility.Collapsed;
+                CallHistory.Visibility = Visibility.Collapsed;
             }
 
         }
@@ -205,8 +285,18 @@ namespace AddressBook2
             if (AddressBookList.SelectedItem != null)
             {
                 int temp = AddressBookList.Items.IndexOf(AddressBookList.SelectedItem);
-                AddressBookList.Items.RemoveAt(AddressBookList.Items.IndexOf(AddressBookList.SelectedItem));
-                AddressBook.RemoveAt(temp);
+                User Selected = (User)AddressBookList.Items[temp];
+                foreach (var item in AddressBook)
+                {
+                    if (item.Name == Selected.Name && item.RepNumber == Selected.Number)
+                    {
+                        AddressBook.Remove(item);
+                        break;
+                    }
+                }
+              //  AddressBookList.Items.RemoveAt(AddressBookList.Items.IndexOf(AddressBookList.SelectedItem));
+               // AddressBook.RemoveAt(temp);
+                RefreshListView();
                 if (AddressBookList.Items.Count > 0)
                 {
                     if (temp >= AddressBookList.Items.Count) AddressBookList.SelectedItem = AddressBookList.Items[temp - 1];
@@ -244,6 +334,8 @@ namespace AddressBook2
             EditBox.Visibility = Visibility.Collapsed;
             CallBox.Visibility = Visibility.Collapsed;
             ReceiveCall.Visibility = Visibility.Collapsed;
+            Calling.Visibility = Visibility.Collapsed;
+            CallHistory.Visibility = Visibility.Collapsed;
         }
 
         private void ModifyButton_Click(object sender, RoutedEventArgs e)
@@ -251,12 +343,22 @@ namespace AddressBook2
             //기존에 바로 수정하던거에서 modified라는 User를 만들고 그걸 대입하게 함
             int temp = AddressBookList.Items.IndexOf(AddressBookList.SelectedItem);
             //선택된 리스트뷰의 인덱스가 결국 리스트의 인덱스니까...
-            AddressBook.RemoveAt(temp); //지우고 그냥 다시 씀
-            User modified = new User(EditNameBox.Text, EditNumberBox.Text);
+           // AddressBook.RemoveAt(temp); //지우고 그냥 다시 씀
+            User Selected = (User)AddressBookList.Items[temp];
+            foreach(var item in AddressBook)
+            {
+                if(item.Name==Selected.Name&&item.RepNumber==Selected.Number)
+                {
+                    item.Name = EditNameBox.Text;
+                    item.RepNumber = EditNumberBox.Text;
+                    break;
+                }
+            }
+          /*  User modified = new User(EditNameBox.Text, EditNumberBox.Text);
             ((User)AddressBookList.SelectedItem).Name = modified.Name;
             ((User)AddressBookList.SelectedItem).Number = modified.Number;
 
-            AddressBook.Add(new Address(modified));
+            AddressBook.Add(new Address(modified));*/
 
             RefreshListView(); //이때 재정렬됨
 
@@ -266,6 +368,8 @@ namespace AddressBook2
             EditBox.Visibility = Visibility.Collapsed;
             CallBox.Visibility = Visibility.Collapsed;
             ReceiveCall.Visibility = Visibility.Collapsed;
+            Calling.Visibility = Visibility.Collapsed;
+            CallHistory.Visibility = Visibility.Collapsed;
         }
 
         private void ListViewItem_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -281,6 +385,8 @@ namespace AddressBook2
                     EditBox.Visibility = Visibility.Collapsed;
                     CallBox.Visibility = Visibility.Collapsed;
                     ReceiveCall.Visibility = Visibility.Collapsed;
+                    Calling.Visibility = Visibility.Collapsed;
+                    CallHistory.Visibility = Visibility.Collapsed;
                 }
                 else if (ListSelected.Visibility == Visibility.Visible)
                 {
@@ -290,6 +396,8 @@ namespace AddressBook2
                     EditBox.Visibility = Visibility.Collapsed;
                     CallBox.Visibility = Visibility.Collapsed;
                     ReceiveCall.Visibility = Visibility.Collapsed;
+                    Calling.Visibility = Visibility.Collapsed;
+                    CallHistory.Visibility = Visibility.Collapsed;
                 }
             }
         }
@@ -307,6 +415,8 @@ namespace AddressBook2
             EditBox.Visibility = Visibility.Collapsed;
             CallBox.Visibility = Visibility.Visible;
             ReceiveCall.Visibility = Visibility.Collapsed;
+            Calling.Visibility = Visibility.Collapsed;
+            CallHistory.Visibility = Visibility.Collapsed;
         }
 
         private void HomeonCallButton_Click(object sender, RoutedEventArgs e)
@@ -317,6 +427,8 @@ namespace AddressBook2
             EditBox.Visibility = Visibility.Collapsed;
             CallBox.Visibility = Visibility.Collapsed;
             ReceiveCall.Visibility = Visibility.Collapsed;
+            Calling.Visibility = Visibility.Collapsed;
+            CallHistory.Visibility = Visibility.Collapsed;
         }
 
         private MediaPlayer mediaPlayer = new MediaPlayer();
@@ -329,7 +441,27 @@ namespace AddressBook2
             EditBox.Visibility = Visibility.Collapsed;
             CallBox.Visibility = Visibility.Collapsed;
             ReceiveCall.Visibility = Visibility.Visible;
+            Calling.Visibility = Visibility.Collapsed;
+            CallHistory.Visibility = Visibility.Collapsed;
+
+            Random r = new Random();
+
+            int temp = r.Next(0,CallBook.Count-1);
+
+            CallUserNum = CallBook[temp].Number;
+
+            CallUser = AddressBook.Find(delegate(Address o) { return o.RepNumber == CallUserNum; });
+
+            if (CallUser != null)
+            {
+                CallName.Text = CallUser.Name;
+            }
+            else
+            {
+                CallName.Text = CallUserNum;
+            }
             
+
             mp.Open(new Uri(@"Bell.mp3", UriKind.Relative));
             mp.Play();
         }
@@ -337,24 +469,106 @@ namespace AddressBook2
         private void RefuseButton_Click(object sender, RoutedEventArgs e)
         {
             mp.Stop();
+            ListSelected.Visibility = Visibility.Collapsed;
+            Action.Visibility = Visibility.Collapsed;
+            AddBox.Visibility = Visibility.Collapsed;
+            EditBox.Visibility = Visibility.Collapsed;
             CallBox.Visibility = Visibility.Visible;
             ReceiveCall.Visibility = Visibility.Collapsed;
+            Calling.Visibility = Visibility.Collapsed;
+            CallHistory.Visibility = Visibility.Collapsed;
         }
 
         private void CallCloseButton_Click(object sender, RoutedEventArgs e)
         {
             mp.Stop();
+            ListSelected.Visibility = Visibility.Collapsed;
+            Action.Visibility = Visibility.Collapsed;
+            AddBox.Visibility = Visibility.Collapsed;
+            EditBox.Visibility = Visibility.Collapsed;
+            ReceiveCall.Visibility = Visibility.Collapsed;
             Calling.Visibility = Visibility.Collapsed;
             CallBox.Visibility = Visibility.Visible;
+            CallHistory.Visibility = Visibility.Collapsed;
         }
 
         private void ReveiveButton_Click(object sender, RoutedEventArgs e)
         {
+            if (CallUser != null)
+            {
+                CallingName.Text = CallUser.Name;
+            }
+            else
+            {
+                CallingName.Text = CallUserNum;
+            }
+            Call newcall = new Call(DateTime.Now.ToString("yyyy") + DateTime.Now.ToString("MM") + DateTime.Now.ToString("dd") + DateTime.Now.ToString("HHmmss"), CallUserNum, "R");
+
+            CallBook.Add(newcall);
+
+            RefreshCallBookList();
+
+            ListSelected.Visibility = Visibility.Collapsed;
+            Action.Visibility = Visibility.Collapsed;
+            AddBox.Visibility = Visibility.Collapsed;
+            EditBox.Visibility = Visibility.Collapsed;
+            CallBox.Visibility = Visibility.Collapsed;
             Calling.Visibility = Visibility.Visible;
             ReceiveCall.Visibility = Visibility.Collapsed;
+            CallHistory.Visibility = Visibility.Collapsed;
             mp.Stop();
             mp.Open(new Uri(@"mosimosi.mp3", UriKind.Relative));
             mp.Play();
+        }
+
+        private void listsearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            RefreshListView();
+        }
+
+         private void HistoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            ListSelected.Visibility = Visibility.Collapsed;
+            Action.Visibility = Visibility.Collapsed;
+            AddBox.Visibility = Visibility.Collapsed;
+            EditBox.Visibility = Visibility.Collapsed;
+            Calling.Visibility = Visibility.Collapsed;
+            ReceiveCall.Visibility = Visibility.Collapsed;
+            CallBox.Visibility = Visibility.Collapsed;
+            CallHistory.Visibility = Visibility.Visible;
+        }
+
+         private void CloseCallBook_Click(object sender, RoutedEventArgs e)
+         {
+             ListSelected.Visibility = Visibility.Collapsed;
+             Action.Visibility = Visibility.Collapsed;
+             AddBox.Visibility = Visibility.Collapsed;
+             EditBox.Visibility = Visibility.Collapsed;
+             Calling.Visibility = Visibility.Collapsed;
+             ReceiveCall.Visibility = Visibility.Collapsed;
+             CallBox.Visibility = Visibility.Visible;
+             CallHistory.Visibility = Visibility.Collapsed;
+         }
+
+        public class Call
+        {
+            public Call (String time, String number, String state)
+            {
+                Time = time;
+                Number = number;
+                State = state;
+            }
+            public Call()
+            {
+                Time = "";
+                Number = "";
+                State = "";
+            }
+            public string Time {get; set;}
+
+            public string Number { get; set; }
+
+            public string State {get; set;}
         }
 
         public class User
@@ -377,11 +591,6 @@ namespace AddressBook2
             public string Name { get; set; }
 
             public string Number { get; set; }
-        }
-
-        private void listsearch_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            RefreshListView();
         }
 
         
