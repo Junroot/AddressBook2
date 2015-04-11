@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("%ec%a0%9c%eb%aa%a9%20%ec%97%86%ec%9d%8c2.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("pawn.png")]
 
 

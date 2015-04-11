@@ -24,6 +24,8 @@ namespace AddressBook2
     public partial class MainWindow : Window
     {
         List<Address> AddressBook = new List<Address>();
+        List<Address> Filtered = new List<Address>();
+        MediaPlayer mp = new MediaPlayer();
         public MainWindow()
         {
             InitializeComponent();
@@ -82,6 +84,7 @@ namespace AddressBook2
 
             foreach (var item in AddressBook) //순서대로 Listview에 넣음
             {
+                if (item.Name.ToLower().IndexOf(listsearch.Text.ToLower()) != -1 || item.RepNumber.ToLower().IndexOf(listsearch.Text.ToLower()) != -1)
                 AddressBookList.Items.Add(new User(item.Name, item.RepNumber));
             }
         }
@@ -89,12 +92,12 @@ namespace AddressBook2
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             MessageBoxResult result;
-            result = MessageBox.Show("Do you want to close this window?", "", MessageBoxButton.YesNo);
-            if (result == MessageBoxResult.No)
+            result = MessageBox.Show("변경 내용을 저장하시겠습니까?", "AddressBook", MessageBoxButton.YesNoCancel);
+            if (result == MessageBoxResult.Cancel)
             {
                 e.Cancel = true;
             }
-            else //닫힐 때 파일 저장
+            else if (result == MessageBoxResult.Yes)//닫힐 때 파일 저장
             {
                 using (XmlTextWriter writer = new XmlTextWriter("Address.xml", System.Text.Encoding.UTF8))
                 {
@@ -112,7 +115,6 @@ namespace AddressBook2
                     writer.WriteEndDocument();
                 }
             }
-
         }
 
         private void AddressBookList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -327,8 +329,31 @@ namespace AddressBook2
             EditBox.Visibility = Visibility.Collapsed;
             CallBox.Visibility = Visibility.Collapsed;
             ReceiveCall.Visibility = Visibility.Visible;
-            MediaPlayer mp = new MediaPlayer();
+            
             mp.Open(new Uri(@"Bell.mp3", UriKind.Relative));
+            mp.Play();
+        }
+
+        private void RefuseButton_Click(object sender, RoutedEventArgs e)
+        {
+            mp.Stop();
+            CallBox.Visibility = Visibility.Visible;
+            ReceiveCall.Visibility = Visibility.Collapsed;
+        }
+
+        private void CallCloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            mp.Stop();
+            Calling.Visibility = Visibility.Collapsed;
+            CallBox.Visibility = Visibility.Visible;
+        }
+
+        private void ReveiveButton_Click(object sender, RoutedEventArgs e)
+        {
+            Calling.Visibility = Visibility.Visible;
+            ReceiveCall.Visibility = Visibility.Collapsed;
+            mp.Stop();
+            mp.Open(new Uri(@"mosimosi.mp3", UriKind.Relative));
             mp.Play();
         }
 
@@ -353,5 +378,12 @@ namespace AddressBook2
 
             public string Number { get; set; }
         }
+
+        private void listsearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            RefreshListView();
+        }
+
+        
     }
 }
