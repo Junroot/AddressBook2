@@ -24,6 +24,7 @@ namespace AddressBook2
     public partial class MainWindow : Window
     {
         List<Address> AddressBook = new List<Address>();
+        MediaPlayer mp = new MediaPlayer();
         public MainWindow()
         {
             InitializeComponent();
@@ -327,8 +328,31 @@ namespace AddressBook2
             EditBox.Visibility = Visibility.Collapsed;
             CallBox.Visibility = Visibility.Collapsed;
             ReceiveCall.Visibility = Visibility.Visible;
-            MediaPlayer mp = new MediaPlayer();
+            
             mp.Open(new Uri(@"Bell.mp3", UriKind.Relative));
+            mp.Play();
+        }
+
+        private void RefuseButton_Click(object sender, RoutedEventArgs e)
+        {
+            mp.Stop();
+            CallBox.Visibility = Visibility.Visible;
+            ReceiveCall.Visibility = Visibility.Collapsed;
+        }
+
+        private void CallCloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            mp.Stop();
+            Calling.Visibility = Visibility.Collapsed;
+            CallBox.Visibility = Visibility.Visible;
+        }
+
+        private void ReveiveButton_Click(object sender, RoutedEventArgs e)
+        {
+            Calling.Visibility = Visibility.Visible;
+            ReceiveCall.Visibility = Visibility.Collapsed;
+            mp.Stop();
+            mp.Open(new Uri(@"mosimosi.mp3", UriKind.Relative));
             mp.Play();
         }
 
@@ -353,5 +377,7 @@ namespace AddressBook2
 
             public string Number { get; set; }
         }
+
+        
     }
 }
