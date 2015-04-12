@@ -66,12 +66,13 @@
                 </ListView.ItemContainerStyle>
             </ListView>
         </Grid>
-        <Grid Name ="SendBox"  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="5" Grid.RowSpan="3" >
+        <Grid Name ="SendBox"  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="5" Grid.RowSpan="3" Visibility="Collapsed">
             <ListView Name="SendList" SelectionChanged="SendList_SelectionChanged" >
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="이름" Width="100"  DisplayMemberBinding="{Binding Name}" />
-                        <GridViewColumn Header="번호" Width="180" DisplayMemberBinding="{Binding Number}" />
+                        <GridViewColumn Header="이름" Width="90"  DisplayMemberBinding="{Binding Number}" />
+                        <GridViewColumn Header="시간" Width="90"  DisplayMemberBinding="{Binding Time}" />
+                        <GridViewColumn Header="내용" Width="110" DisplayMemberBinding="{Binding Content}" />
                     </GridView>
                 </ListView.View>
                 <ListView.ItemContainerStyle>

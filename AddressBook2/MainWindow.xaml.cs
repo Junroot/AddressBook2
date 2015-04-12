@@ -26,6 +26,8 @@ namespace AddressBook2
         List<Address> AddressBook = new List<Address>();
         List<Address> Filtered = new List<Address>();
         List<Call> CallBook = new List<Call>();
+        List<SMS> InBox = new List<SMS>();
+        List<SMS> OutBox = new List<SMS>();
         MediaPlayer mp = new MediaPlayer();
         String CallUserNum;
         Address CallUser;
@@ -474,6 +476,11 @@ namespace AddressBook2
             Calling.Visibility = Visibility.Collapsed;
             CallHistory.Visibility = Visibility.Collapsed;
             SMSBox.Visibility = Visibility.Collapsed;
+            SendBox.Visibility = Visibility.Collapsed;
+            main.Visibility = Visibility.Visible;
+            AddButton.Visibility = Visibility.Visible;
+            DeleteButton.Visibility = Visibility.Visible;
+            EditButton.Visibility = Visibility.Visible;
         }
 
         private MediaPlayer mediaPlayer = new MediaPlayer();
@@ -640,18 +647,164 @@ namespace AddressBook2
                 Number = user.Number;
             }
             public string Name { get; set; }
-            sdsds;
+            
             public string Number { get; set; }
+        }
+        public class SMS
+        {
+            public SMS(String time, String number, String content)
+            {
+                Time = time;
+                Number = number;
+                Content = content;
+            }
+            public SMS()
+            {
+                Time = "";
+                Number = "";
+                Content = "";
+            }
+            public SMS(SMS sms)
+            {
+                Time = sms.Time;
+                Number = sms.Number;
+                Content = sms.Content;
+            }
+            public String Time { get; set; }
+            public String Number { get; set; }
+            public String Content { get; set; }
         }
 
         private void ReceiveSMSButton_Click(object sender, RoutedEventArgs e)
         {
+            main.Visibility = Visibility.Collapsed;
+
+            SendBox.Visibility = Visibility.Visible;
+            AddButton.Visibility = Visibility.Collapsed;
+            DeleteButton.Visibility = Visibility.Collapsed;
+            EditButton.Visibility = Visibility.Collapsed;
+            SendList.Items.Clear();
+            using (XmlReader reader = XmlReader.Create("Receive.xml"))
+            {
+                String time = "";
+                String number = "";
+                String content = "";
+                String status = "";
+                
+                while (reader.Read())
+                {
+                    switch (reader.NodeType)
+                    {
+                        case XmlNodeType.Element:
+                            status = reader.Name;
+                            break;
+                        case XmlNodeType.Text:
+                            if (status == "Time")
+                                time = reader.Value;
+                                
+                            else if (status == "Number")
+                                number = reader.Value;
+                            else if (status == "Content")
+                                content = reader.Value;
+                            break;
+                        case XmlNodeType.EndElement:
+                            if (reader.Name == "Receive")
+                                InBox.Add(new SMS(time, number, content));
+                            break;
+                        default:
+                            break;
+                    }
+                    InBox.Sort(delegate(SMS x, SMS y) //시간순으로 sort
+                    {
+                        if (x.Time == null && y.Time == null) return 0;
+                        else if (x.Time == null) return -1;
+                        else if (y.Time == null) return 1;
+                        else return -(x.Time.CompareTo(y.Time));
+                    });
+                    
+                }
+                foreach (var item in InBox)
+                {
+                    String printtime = "" + item.Time[4] + item.Time[5] + "-" + item.Time[6] + item.Time[7] + " " + item.Time[8] + item.Time[9] + ":" + item.Time[10] + item.Time[11];
+                    item.Time = printtime;
+                    foreach (var address in AddressBook)
+                    {
+                        if (address.RepNumber == item.Number)
+                            item.Number = address.Name;
+                    }
+                    SendList.Items.Add(item);
+                }
+                reader.Close();
+            }
 
         }
 
         private void SendSMS_Click(object sender, RoutedEventArgs e)
         {
+            main.Visibility = Visibility.Collapsed;
+            SendBox.Visibility = Visibility.Visible;
+            AddButton.Visibility = Visibility.Collapsed;
+            DeleteButton.Visibility = Visibility.Collapsed;
+            EditButton.Visibility = Visibility.Collapsed;
+            SendList.Items.Clear();
+          
+            using (XmlReader reader = XmlReader.Create("Send.xml"))
+            {
+                String time = "";
+                String number = "";
+                String content = "";
+                String status = "";
+                while (reader.Read())
+                {
+                    switch (reader.NodeType)
+                    {
+                        case XmlNodeType.Element:
+                            status = reader.Name;
+                            break;
+                        case XmlNodeType.Text:
+                            if (status == "Time")
+                                time = reader.Value;
 
+                            else if (status == "Number")
+                                number = reader.Value;
+                            else if (status == "Content")
+                                content = reader.Value;
+                            break;
+                        case XmlNodeType.EndElement:
+                            if (reader.Name == "Send")
+                                InBox.Add(new SMS(time, number, content));
+                            break;
+                        default:
+                            break;
+                    }
+                    InBox.Sort(delegate(SMS x, SMS y) //시간순으로 sort
+                    {
+                        if (x.Time == null && y.Time == null) return 0;
+                        else if (x.Time == null) return -1;
+                        else if (y.Time == null) return 1;
+                        else return -(x.Time.CompareTo(y.Time));
+                    });
+
+                }
+                foreach (var item in InBox)
+                {
+                    String printtime = "" + item.Time[4] + item.Time[5] + "-" + item.Time[6] + item.Time[7] + " " + item.Time[8] + item.Time[9] + ":" + item.Time[10] + item.Time[11];
+                    item.Time = printtime;
+                    foreach (var address in AddressBook)
+                    {
+                        if (address.RepNumber == item.Number)
+                            item.Number = address.Name;
+                    }
+                    SendList.Items.Add(item);
+                }
+                reader.Close();
+            }
+       
+
+        }
+
+        private void SendList_SelectionChanged(object sender, RoutedEventArgs e)
+        {
         }
     }
 }
