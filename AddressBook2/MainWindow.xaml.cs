@@ -728,14 +728,15 @@ namespace AddressBook2
                 }
                 foreach (var item in InBox)
                 {
+                    SMS temp = new SMS(item);
                     String printtime = "" + item.Time[4] + item.Time[5] + "-" + item.Time[6] + item.Time[7] + " " + item.Time[8] + item.Time[9] + ":" + item.Time[10] + item.Time[11];
-                    item.Time = printtime;
+                    temp.Time = printtime;
                     foreach (var address in AddressBook)
                     {
                         if (address.RepNumber == item.Number)
-                            item.Number = address.Name;
+                            temp.Number = address.Name;
                     }
-                    SendList.Items.Add(item);
+                    SendList.Items.Add(temp);
                 }
                 reader.Close();
             }
@@ -792,14 +793,15 @@ namespace AddressBook2
                 }
                 foreach (var item in OutBox)
                 {
+                    SMS temp = new SMS(item);
                     String printtime = "" + item.Time[4] + item.Time[5] + "-" + item.Time[6] + item.Time[7] + " " + item.Time[8] + item.Time[9] + ":" + item.Time[10] + item.Time[11];
-                    item.Time = printtime;
+                    temp.Time = printtime;
                     foreach (var address in AddressBook)
                     {
                         if (address.RepNumber == item.Number)
-                            item.Number = address.Name;
+                            temp.Number = address.Name;
                     }
-                    SendList.Items.Add(item);
+                    SendList.Items.Add(temp);
                 }
                 reader.Close();
             }
