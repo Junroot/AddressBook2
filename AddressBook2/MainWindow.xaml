@@ -66,6 +66,21 @@
                 </ListView.ItemContainerStyle>
             </ListView>
         </Grid>
+        <Grid Name ="SendBox"  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="5" Grid.RowSpan="3" >
+            <ListView Name="SendList" SelectionChanged="SendList_SelectionChanged" >
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="이름" Width="100"  DisplayMemberBinding="{Binding Name}" />
+                        <GridViewColumn Header="번호" Width="180" DisplayMemberBinding="{Binding Number}" />
+                    </GridView>
+                </ListView.View>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListViewItem_PreviewMouseLeftButtonDown" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+        </Grid>
         <Button Name="AddButton" Click="AddButton_Click" Grid.Row="3" Grid.Column="1">추가</Button>
         <Button Name="EditButton" Click="EditButton_Click" Grid.Row="3" Grid.Column="3">편집</Button>
         <Button Name="DeleteButton" Click="DeleteButton_Click" Grid.Row="3" Grid.Column="5">삭제</Button>
