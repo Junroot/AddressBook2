@@ -66,7 +66,8 @@
                 </ListView.ItemContainerStyle>
             </ListView>
         </Grid>
-        <Grid Name ="SendBox"  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="5" Grid.RowSpan="3" Visibility="Collapsed">
+        <Grid Name ="SendBox"  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="5" Grid.RowSpan="3" Margin="0,44,0,0" Visibility="Collapsed">
+            <TextBlock Name="sendorreceiveblock" HorizontalAlignment="Center" FontSize="20" Margin="0,-44,0,0">SEND</TextBlock>
             <ListView Name="SendList" SelectionChanged="SendList_SelectionChanged" >
                 <ListView.View>
                     <GridView>
@@ -77,7 +78,7 @@
                 </ListView.View>
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
-                        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListViewItem_PreviewMouseLeftButtonDown" />
+                        <EventSetter Event="PreviewMouseLeftButtonDown" Handler="Send_ListViewItem_PreviewMouseLeftButtonDown" />
                     </Style>
                 </ListView.ItemContainerStyle>
             </ListView>
@@ -95,7 +96,7 @@
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="상태" Width="50" DisplayMemberBinding="{Binding State}" />
-                        <GridViewColumn Header="번호" Width="150" DisplayMemberBinding="{Binding Number}" />
+                        <GridViewColumn Header="이름" Width="150" DisplayMemberBinding="{Binding Number}" />
                         <GridViewColumn Header="시간" Width="150"  DisplayMemberBinding="{Binding Time}" />
                     </GridView>
                 </ListView.View>
@@ -122,6 +123,38 @@
                 </StackPanel>
             </Button>
 
+        </Grid>
+        <Grid Name="Send_ListSelected" Grid.Column="7" Grid.Row="1" Grid.RowSpan="3" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="1" Grid.Column="1" VerticalAlignment="Center">이름</TextBlock>
+            <TextBlock Name="SendNameBlock" Grid.Row="1" Grid.Column="3" Grid.ColumnSpan="6" VerticalAlignment="Center" />
+            <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center">시간</TextBlock>
+            <TextBlock Name="SendTimeBlock" Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="6" VerticalAlignment="Center"  />
+            <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center">내용</TextBlock>
+            <TextBlock Name="ContentBlock" Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="6" Grid.RowSpan="6" Margin="0,13,0,0"/>
         </Grid>
         <Grid Name="ListSelected" Visibility="Collapsed" Grid.Column="7" Grid.Row="1" Grid.RowSpan="3">
             <Grid.RowDefinitions>

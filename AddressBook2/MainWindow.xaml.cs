@@ -226,6 +226,41 @@ namespace AddressBook2
                 SMSBox.Visibility = Visibility.Collapsed;
             }
         }
+        
+        private void SendList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SMS s = new SMS();
+            if (SendList.SelectedItem != null)
+            {
+                s = (SMS)SendList.SelectedItem;
+                SendNameBlock.Text = s.Number;
+                SendTimeBlock.Text = s.Time;
+                ContentBlock.Text = s.Content;
+                    ListSelected.Visibility = Visibility.Collapsed;
+                    Action.Visibility = Visibility.Collapsed;
+                    AddBox.Visibility = Visibility.Collapsed;
+                    EditBox.Visibility = Visibility.Collapsed;
+                    CallBox.Visibility = Visibility.Collapsed;
+                    ReceiveCall.Visibility = Visibility.Collapsed;
+                    Calling.Visibility = Visibility.Collapsed;
+                    CallHistory.Visibility = Visibility.Collapsed;
+                    SMSBox.Visibility = Visibility.Collapsed;
+                    Send_ListSelected.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                ListSelected.Visibility = Visibility.Collapsed;
+                Action.Visibility = Visibility.Collapsed;
+                AddBox.Visibility = Visibility.Collapsed;
+                EditBox.Visibility = Visibility.Collapsed;
+                CallBox.Visibility = Visibility.Collapsed;
+                ReceiveCall.Visibility = Visibility.Collapsed;
+                Calling.Visibility = Visibility.Collapsed;
+                CallHistory.Visibility = Visibility.Collapsed;
+                SMSBox.Visibility = Visibility.Visible;
+                Send_ListSelected.Visibility = Visibility.Collapsed;
+            }
+        }
 
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
@@ -417,6 +452,40 @@ namespace AddressBook2
                     Calling.Visibility = Visibility.Collapsed;
                     CallHistory.Visibility = Visibility.Collapsed;
                     SMSBox.Visibility = Visibility.Collapsed;
+                }
+            }
+        }
+
+        private void Send_ListViewItem_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var item = sender as ListViewItem;
+            if (item != null && item.IsSelected)
+            {
+                if (Send_ListSelected.Visibility == Visibility.Collapsed)
+                {
+                    ListSelected.Visibility = Visibility.Collapsed;
+                    Action.Visibility = Visibility.Collapsed;
+                    AddBox.Visibility = Visibility.Collapsed;
+                    EditBox.Visibility = Visibility.Collapsed;
+                    CallBox.Visibility = Visibility.Collapsed;
+                    ReceiveCall.Visibility = Visibility.Collapsed;
+                    Calling.Visibility = Visibility.Collapsed;
+                    CallHistory.Visibility = Visibility.Collapsed;
+                    SMSBox.Visibility = Visibility.Collapsed;
+                    Send_ListSelected.Visibility = Visibility.Visible;
+                }
+                else if (Send_ListSelected.Visibility == Visibility.Visible)
+                {
+                    ListSelected.Visibility = Visibility.Collapsed;
+                    Action.Visibility = Visibility.Collapsed;
+                    AddBox.Visibility = Visibility.Collapsed;
+                    EditBox.Visibility = Visibility.Collapsed;
+                    CallBox.Visibility = Visibility.Collapsed;
+                    ReceiveCall.Visibility = Visibility.Collapsed;
+                    Calling.Visibility = Visibility.Collapsed;
+                    CallHistory.Visibility = Visibility.Collapsed;
+                    SMSBox.Visibility = Visibility.Visible;
+                    Send_ListSelected.Visibility = Visibility.Collapsed;
                 }
             }
         }
@@ -677,7 +746,7 @@ namespace AddressBook2
 
         private void ReceiveSMSButton_Click(object sender, RoutedEventArgs e)
         {
-            
+            sendorreceiveblock.Text = "Receive";
             main.Visibility = Visibility.Collapsed;
 
             SendBox.Visibility = Visibility.Visible;
@@ -745,6 +814,7 @@ namespace AddressBook2
 
         private void SendSMS_Click(object sender, RoutedEventArgs e)
         {
+            sendorreceiveblock.Text = "Send";
             main.Visibility = Visibility.Collapsed;
             SendBox.Visibility = Visibility.Visible;
             AddButton.Visibility = Visibility.Collapsed;
