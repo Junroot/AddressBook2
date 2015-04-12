@@ -677,6 +677,7 @@ namespace AddressBook2
 
         private void ReceiveSMSButton_Click(object sender, RoutedEventArgs e)
         {
+            
             main.Visibility = Visibility.Collapsed;
 
             SendBox.Visibility = Visibility.Visible;
@@ -686,6 +687,8 @@ namespace AddressBook2
             SendList.Items.Clear();
             using (XmlReader reader = XmlReader.Create("Receive.xml"))
             {
+                InBox.Clear();
+                reader.MoveToFirstAttribute();
                 String time = "";
                 String number = "";
                 String content = "";
@@ -750,6 +753,7 @@ namespace AddressBook2
           
             using (XmlReader reader = XmlReader.Create("Send.xml"))
             {
+                OutBox.Clear();
                 String time = "";
                 String number = "";
                 String content = "";
@@ -772,7 +776,7 @@ namespace AddressBook2
                             break;
                         case XmlNodeType.EndElement:
                             if (reader.Name == "Send")
-                                InBox.Add(new SMS(time, number, content));
+                                OutBox.Add(new SMS(time, number, content));
                             break;
                         default:
                             break;
@@ -786,7 +790,7 @@ namespace AddressBook2
                     });
 
                 }
-                foreach (var item in InBox)
+                foreach (var item in OutBox)
                 {
                     String printtime = "" + item.Time[4] + item.Time[5] + "-" + item.Time[6] + item.Time[7] + " " + item.Time[8] + item.Time[9] + ":" + item.Time[10] + item.Time[11];
                     item.Time = printtime;
