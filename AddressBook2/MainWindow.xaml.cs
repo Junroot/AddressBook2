@@ -243,7 +243,7 @@ namespace AddressBook2
                 SendNameBlock.Text = s.Number;
                 SendTimeBlock.Text = "" + item.Time[0] + item.Time[1] + item.Time[2] + item.Time[3] + "-" + item.Time[4] + item.Time[5] + "-" + 
                     item.Time[6] + item.Time[7] + " " + item.Time[8] + item.Time[9] + ":" + item.Time[10] + item.Time[11] + ":" + item.Time[12] + item.Time[13];
-                ContentBlock.Text = s.Content;
+                ContentBlock.Text = item.Content;
                     ListSelected.Visibility = Visibility.Collapsed;
                     Action.Visibility = Visibility.Collapsed;
                     AddBox.Visibility = Visibility.Collapsed;
