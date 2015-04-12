@@ -93,9 +93,11 @@
                     <Image Source="Call.png" />
                 </StackPanel>
             </Button>
-            <Button Name="SMSButton" BorderThickness="0" Margin="0,168,0,168">
+            <Button Name="SMSButton" Click="SMSButton_Click" BorderThickness="0" Margin="0,168,0,168">
                 <StackPanel>
                     <Image  Source="SMS.png"/>
+                    <Image Height="104" Source="send.png" Stretch="Fill" Width="471"/>
+                    <Image Height="104" Source="receive.png" Stretch="Fill" Width="471"/>
                 </StackPanel>
             </Button>
             <Button Name="ExitButton" Click="ExitButton_Click" BorderThickness="0" Margin="0,290,0,46">
@@ -218,7 +220,24 @@
                     <Image Source="Home.png"/>
                 </StackPanel>
             </Button>
-
+        </Grid>
+        <Grid Name="SMSBox" Visibility="Collapsed" Grid.Column="7" Grid.Row="1" Grid.RowSpan="3">
+            <TextBlock HorizontalAlignment="Center" FontSize="20">HOME - SMS</TextBlock>
+            <Button Name="ReceiveSMSButton" Click="ReceiveSMSButton_Click"  BorderThickness="0" Margin="0,46,0,290">
+                <StackPanel>
+                    <Image Source="receive.png"/>
+                </StackPanel>
+            </Button>
+            <Button Name="SendSMS" Click="SendSMS_Click"  BorderThickness="0" Margin="0,168,0,168">
+                <StackPanel>
+                    <Image Source="send.png"/>
+                </StackPanel>
+            </Button>
+            <Button Name="HomeonSMSButton" Click="HomeonSMSButton_Click"  BorderThickness="0" Margin="0,290,0,46">
+                <StackPanel>
+                    <Image Source="Home.png"/>
+                </StackPanel>
+            </Button>
         </Grid>
         <Grid Name="ReceiveCall" Visibility="Collapsed" Grid.Column="7" Grid.Row="1" HorizontalAlignment="Center" RenderTransformOrigin="0.63,0.517" Grid.RowSpan="3">
             <Image Margin="38,0,38,79" Source="2.png"/>

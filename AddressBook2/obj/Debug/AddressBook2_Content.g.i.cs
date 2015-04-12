@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("pawn.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("send.png")]
 
 

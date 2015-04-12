@@ -135,8 +135,16 @@ namespace AddressBook2
             });
             foreach (var item in CallBook) //순서대로 Listview에 넣음
             {
-                String printtime =  ""+ item.Time[0] + item.Time[1] + item.Time[2] + item.Time[3] + "-" + item.Time[4] + item.Time[5] + "-" + item.Time[6] + item.Time[7] + " " + item.Time[8] + item.Time[9] + ":" + item.Time[10] + item.Time[11] + ":" + item.Time[12] + item.Time[13];
-                CallBookList.Items.Add(new Call(printtime, item.Number, item.State));
+                CallUser = (Address)AddressBook.Find(delegate(Address o) { return o.RepNumber == item.Number; });
+                String printtime = "" + item.Time[0] + item.Time[1] + item.Time[2] + item.Time[3] + "-" + item.Time[4] + item.Time[5] + "-" + item.Time[6] + item.Time[7] + " " + item.Time[8] + item.Time[9] + ":" + item.Time[10] + item.Time[11] + ":" + item.Time[12] + item.Time[13];
+                if (CallUser != null)
+                {
+                    CallBookList.Items.Add(new Call(printtime, CallUser.Name, item.State));
+                }
+                else
+                {
+                    CallBookList.Items.Add(new Call(printtime, item.Number, item.State));
+                }
             }
         }
 
@@ -201,6 +209,7 @@ namespace AddressBook2
                 ReceiveCall.Visibility = Visibility.Collapsed;
                 Calling.Visibility = Visibility.Collapsed;
                 CallHistory.Visibility = Visibility.Collapsed;
+                SMSBox.Visibility = Visibility.Collapsed;
             }
             else
             {
@@ -212,6 +221,7 @@ namespace AddressBook2
                 ReceiveCall.Visibility = Visibility.Collapsed;
                 Calling.Visibility = Visibility.Collapsed;
                 CallHistory.Visibility = Visibility.Collapsed;
+                SMSBox.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -227,7 +237,7 @@ namespace AddressBook2
                 ReceiveCall.Visibility = Visibility.Collapsed;
                 Calling.Visibility = Visibility.Collapsed;
                 CallHistory.Visibility = Visibility.Collapsed;
-
+                SMSBox.Visibility = Visibility.Collapsed;
             }
             else if (AddBox.Visibility == Visibility.Visible)
             {
@@ -239,6 +249,7 @@ namespace AddressBook2
                 ReceiveCall.Visibility = Visibility.Collapsed;
                 Calling.Visibility = Visibility.Collapsed;
                 CallHistory.Visibility = Visibility.Collapsed;
+                SMSBox.Visibility = Visibility.Collapsed;
                 NameBox.Text = String.Empty;
                 NumberBox.Text = String.Empty;
 
@@ -260,6 +271,7 @@ namespace AddressBook2
                     ReceiveCall.Visibility = Visibility.Collapsed;
                     Calling.Visibility = Visibility.Collapsed;
                     CallHistory.Visibility = Visibility.Collapsed;
+                    SMSBox.Visibility = Visibility.Collapsed;
                     EditNameBox.Text = u.Name;
                     EditNumberBox.Text = u.Number;
                 }
@@ -275,6 +287,7 @@ namespace AddressBook2
                 ReceiveCall.Visibility = Visibility.Collapsed;
                 Calling.Visibility = Visibility.Collapsed;
                 CallHistory.Visibility = Visibility.Collapsed;
+                SMSBox.Visibility = Visibility.Collapsed;
             }
 
         }
@@ -336,6 +349,7 @@ namespace AddressBook2
             ReceiveCall.Visibility = Visibility.Collapsed;
             Calling.Visibility = Visibility.Collapsed;
             CallHistory.Visibility = Visibility.Collapsed;
+            SMSBox.Visibility = Visibility.Collapsed;
         }
 
         private void ModifyButton_Click(object sender, RoutedEventArgs e)
@@ -370,6 +384,7 @@ namespace AddressBook2
             ReceiveCall.Visibility = Visibility.Collapsed;
             Calling.Visibility = Visibility.Collapsed;
             CallHistory.Visibility = Visibility.Collapsed;
+            SMSBox.Visibility = Visibility.Collapsed;
         }
 
         private void ListViewItem_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -387,6 +402,7 @@ namespace AddressBook2
                     ReceiveCall.Visibility = Visibility.Collapsed;
                     Calling.Visibility = Visibility.Collapsed;
                     CallHistory.Visibility = Visibility.Collapsed;
+                    SMSBox.Visibility = Visibility.Collapsed;
                 }
                 else if (ListSelected.Visibility == Visibility.Visible)
                 {
@@ -398,6 +414,7 @@ namespace AddressBook2
                     ReceiveCall.Visibility = Visibility.Collapsed;
                     Calling.Visibility = Visibility.Collapsed;
                     CallHistory.Visibility = Visibility.Collapsed;
+                    SMSBox.Visibility = Visibility.Collapsed;
                 }
             }
         }
@@ -417,6 +434,20 @@ namespace AddressBook2
             ReceiveCall.Visibility = Visibility.Collapsed;
             Calling.Visibility = Visibility.Collapsed;
             CallHistory.Visibility = Visibility.Collapsed;
+            SMSBox.Visibility = Visibility.Collapsed;
+        }
+
+        private void SMSButton_Click(object sender, RoutedEventArgs e)
+        {
+            ListSelected.Visibility = Visibility.Collapsed;
+            Action.Visibility = Visibility.Collapsed;
+            AddBox.Visibility = Visibility.Collapsed;
+            EditBox.Visibility = Visibility.Collapsed;
+            CallBox.Visibility = Visibility.Collapsed;
+            ReceiveCall.Visibility = Visibility.Collapsed;
+            Calling.Visibility = Visibility.Collapsed;
+            CallHistory.Visibility = Visibility.Collapsed;
+            SMSBox.Visibility = Visibility.Visible;
         }
 
         private void HomeonCallButton_Click(object sender, RoutedEventArgs e)
@@ -429,6 +460,20 @@ namespace AddressBook2
             ReceiveCall.Visibility = Visibility.Collapsed;
             Calling.Visibility = Visibility.Collapsed;
             CallHistory.Visibility = Visibility.Collapsed;
+            SMSBox.Visibility = Visibility.Collapsed;
+        }
+
+        private void HomeonSMSButton_Click(object sender, RoutedEventArgs e)
+        {
+            ListSelected.Visibility = Visibility.Collapsed;
+            Action.Visibility = Visibility.Visible;
+            AddBox.Visibility = Visibility.Collapsed;
+            EditBox.Visibility = Visibility.Collapsed;
+            CallBox.Visibility = Visibility.Collapsed;
+            ReceiveCall.Visibility = Visibility.Collapsed;
+            Calling.Visibility = Visibility.Collapsed;
+            CallHistory.Visibility = Visibility.Collapsed;
+            SMSBox.Visibility = Visibility.Collapsed;
         }
 
         private MediaPlayer mediaPlayer = new MediaPlayer();
@@ -443,6 +488,7 @@ namespace AddressBook2
             ReceiveCall.Visibility = Visibility.Visible;
             Calling.Visibility = Visibility.Collapsed;
             CallHistory.Visibility = Visibility.Collapsed;
+            SMSBox.Visibility = Visibility.Collapsed;
 
             Random r = new Random();
 
@@ -477,6 +523,7 @@ namespace AddressBook2
             ReceiveCall.Visibility = Visibility.Collapsed;
             Calling.Visibility = Visibility.Collapsed;
             CallHistory.Visibility = Visibility.Collapsed;
+            SMSBox.Visibility = Visibility.Collapsed;
         }
 
         private void CallCloseButton_Click(object sender, RoutedEventArgs e)
@@ -490,6 +537,7 @@ namespace AddressBook2
             Calling.Visibility = Visibility.Collapsed;
             CallBox.Visibility = Visibility.Visible;
             CallHistory.Visibility = Visibility.Collapsed;
+            SMSBox.Visibility = Visibility.Collapsed;
         }
 
         private void ReveiveButton_Click(object sender, RoutedEventArgs e)
@@ -516,6 +564,7 @@ namespace AddressBook2
             Calling.Visibility = Visibility.Visible;
             ReceiveCall.Visibility = Visibility.Collapsed;
             CallHistory.Visibility = Visibility.Collapsed;
+            SMSBox.Visibility = Visibility.Collapsed;
             mp.Stop();
             mp.Open(new Uri(@"mosimosi.mp3", UriKind.Relative));
             mp.Play();
@@ -536,6 +585,7 @@ namespace AddressBook2
             ReceiveCall.Visibility = Visibility.Collapsed;
             CallBox.Visibility = Visibility.Collapsed;
             CallHistory.Visibility = Visibility.Visible;
+            SMSBox.Visibility = Visibility.Collapsed;
         }
 
          private void CloseCallBook_Click(object sender, RoutedEventArgs e)
@@ -548,6 +598,7 @@ namespace AddressBook2
              ReceiveCall.Visibility = Visibility.Collapsed;
              CallBox.Visibility = Visibility.Visible;
              CallHistory.Visibility = Visibility.Collapsed;
+             SMSBox.Visibility = Visibility.Collapsed;
          }
 
         public class Call
@@ -593,6 +644,14 @@ namespace AddressBook2
             public string Number { get; set; }
         }
 
-        
+        private void ReceiveSMSButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SendSMS_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
