@@ -154,7 +154,7 @@
             <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center">시간</TextBlock>
             <TextBlock Name="SendTimeBlock" Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="6" VerticalAlignment="Center"  />
             <TextBlock Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center">내용</TextBlock>
-            <TextBlock Name="ContentBlock" Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="6" Grid.RowSpan="6" Margin="0,13,0,0"/>
+            <TextBlock Name="ContentBlock" Grid.Row="3" Grid.Column="3" Grid.ColumnSpan="6" Grid.RowSpan="6" Margin="0,13,0,0" TextWrapping="Wrap"/>
         </Grid>
         <Grid Name="ListSelected" Visibility="Collapsed" Grid.Column="7" Grid.Row="1" Grid.RowSpan="3">
             <Grid.RowDefinitions>

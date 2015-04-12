@@ -31,6 +31,7 @@ namespace AddressBook2
         MediaPlayer mp = new MediaPlayer();
         String CallUserNum;
         Address CallUser;
+        bool SMS_Status_receive = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -233,8 +234,15 @@ namespace AddressBook2
             if (SendList.SelectedItem != null)
             {
                 s = (SMS)SendList.SelectedItem;
+                int i = SendList.SelectedIndex;
+                SMS item = new SMS();
+                if(SMS_Status_receive)
+                    item = InBox[i];
+                else
+                    item = OutBox[i];
                 SendNameBlock.Text = s.Number;
-                SendTimeBlock.Text = s.Time;
+                SendTimeBlock.Text = "" + item.Time[0] + item.Time[1] + item.Time[2] + item.Time[3] + "-" + item.Time[4] + item.Time[5] + "-" + 
+                    item.Time[6] + item.Time[7] + " " + item.Time[8] + item.Time[9] + ":" + item.Time[10] + item.Time[11] + ":" + item.Time[12] + item.Time[13];
                 ContentBlock.Text = s.Content;
                     ListSelected.Visibility = Visibility.Collapsed;
                     Action.Visibility = Visibility.Collapsed;
@@ -459,6 +467,8 @@ namespace AddressBook2
         private void Send_ListViewItem_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             var item = sender as ListViewItem;
+            int idx = SendList.SelectedIndex;
+
             if (item != null && item.IsSelected)
             {
                 if (Send_ListSelected.Visibility == Visibility.Collapsed)
@@ -746,6 +756,7 @@ namespace AddressBook2
 
         private void ReceiveSMSButton_Click(object sender, RoutedEventArgs e)
         {
+            SMS_Status_receive = true;
             sendorreceiveblock.Text = "Receive";
             main.Visibility = Visibility.Collapsed;
 
@@ -805,6 +816,7 @@ namespace AddressBook2
                         if (address.RepNumber == item.Number)
                             temp.Number = address.Name;
                     }
+                    temp.Content = temp.Content.Split('\n')[0];
                     SendList.Items.Add(temp);
                 }
                 reader.Close();
@@ -814,6 +826,7 @@ namespace AddressBook2
 
         private void SendSMS_Click(object sender, RoutedEventArgs e)
         {
+            SMS_Status_receive = false;
             sendorreceiveblock.Text = "Send";
             main.Visibility = Visibility.Collapsed;
             SendBox.Visibility = Visibility.Visible;
@@ -871,6 +884,7 @@ namespace AddressBook2
                         if (address.RepNumber == item.Number)
                             temp.Number = address.Name;
                     }
+                    temp.Content = temp.Content.Split('\n')[0];
                     SendList.Items.Add(temp);
                 }
                 reader.Close();
